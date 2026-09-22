@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Global Refriauto — Sistemas HVAC automotrices</title>
+<link rel="icon" href="assets/logo-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* fixed brand constants — never adapt to theme, always read as the logo's navy/sky */
+    --navy:#003B6C;
+    --sky:#3399CC;
+    --mid:#1D6099;
+    --ice:#C8E9F1;
+
+    /* theme-adaptive tokens — allowed to shift for contrast */
+    --heading:#003B6C;
+    --accent:#3399CC;
+    --accent-mid:#1D6099;
+    --tint:#C8E9F1;
+    --tint-2: #EAF5FA;
+    --bg:#FFFFFF;
+    --bg-soft:#F4F9FC;
+    --line:#DCEAF2;
+    --text:#26394A;
+    --text-dim:#5F7788;
+    --text-faint:#8AA0AF;
+
+    /* brand fill — used only for solid buttons/bands, always vivid navy→sky, never washed out */
+    --brand-fill:#003B6C;
+    --brand-fill-hover:#1D6099;
+    --brand-fill-2:#1D6099;
+    --brand-on-fill:#FFFFFF;
+
+    --font-display:'Poppins', sans-serif;
+    --font-accent:'Poppins', sans-serif;
+    --font-body:'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --heading:#BFE0F2;
+      --accent:#5FC1EA;
+      --accent-mid:#3399CC;
+      --tint:#123249;
+      --tint-2:#0E2637;
+      --bg:#081826;
+      --bg-soft:#0D2233;
+      --line:#1C3A50;
+      --text:#E4EEF5;
+      --text-dim:#93ADC0;
+      --text-faint:#5E7A8C;
+
+      /* keep buttons/bands vivid sky-blue against the dark background, never pale icy */
+      --brand-fill:#3399CC;
+      --brand-fill-hover:#5FC1EA;
+      --brand-fill-2:#1D6099;
+      --brand-on-fill:#06182A;
+    }
+  }
+  :root[data-theme="dark"]{
+    --heading:#BFE0F2; --accent:#5FC1EA; --accent-mid:#3399CC; --tint:#123249; --tint-2:#0E2637;
+    --bg:#081826; --bg-soft:#0D2233; --line:#1C3A50; --text:#E4EEF5; --text-dim:#93ADC0; --text-faint:#5E7A8C;
+    --brand-fill:#3399CC; --brand-fill-hover:#5FC1EA; --brand-fill-2:#1D6099; --brand-on-fill:#06182A;
+  }
+
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; scroll-padding-top: calc(88px + env(safe-area-inset-top,0px)); }
+  html,body{ height:100%; }
+  body{
+    margin:0; background:var(--bg); color:var(--text); font-family:var(--font-body);
+    padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+    -webkit-font-smoothing:antialiased; overflow-x:hidden;
+  }
+  a{ color:inherit; }
+  ::selection{ background:var(--tint); color:var(--heading); }
+  :focus-visible{ outline:2px solid var(--accent); outline-offset:3px; border-radius:3px; }
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; scroll-behavior:auto !important; }
+  }
+  .wrap{ max-width:1180px; margin:0 auto; padding:0 clamp(20px,5vw,56px); }
+
+  /* ---------- Header ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    padding-top:env(safe-area-inset-top,0px);
+    background: color-mix(in srgb, var(--bg) 90%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav{ display:flex; align-items:center; justify-content:space-between; height:80px; }
+  .brand-logo{ display:flex; align-items:center; height:44px; }
+  .brand-logo img{ height:100%; width:auto; display:block; }
+  .nav-links{ display:flex; gap:32px; align-items:center; list-style:none; margin:0; padding:0; }
+  .nav-links a{ text-decoration:none; color:var(--text-dim); font-size:14.5px; font-weight:500; transition:color .15s ease; }
+  .nav-links a:hover{ color:var(--heading); }
+  .nav-cta{
+    display:inline-flex; align-items:center; gap:8px;
+    background:var(--brand-fill); color:var(--brand-on-fill); font-weight:600; font-size:14px;
+    padding:11px 20px; border-radius:999px; text-decoration:none;
+    transition: background .15s ease, transform .15s ease;
+  }
+  .nav-cta:hover{ background:var(--brand-fill-hover); transform:translateY(-1px); }
+  .menu-btn{ display:none; background:none; border:1px solid var(--line); color:var(--heading); width:42px; height:42px; border-radius:8px; align-items:center; justify-content:center; }
+
+  /* ---------- Hero ---------- */
+  .hero{ padding: clamp(48px,8vw,90px) 0 clamp(40px,6vw,64px); position:relative; overflow:hidden; }
+  .hero-grid{ display:grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(24px,5vw,60px); align-items:center; }
+  .eyebrow{
+    font-family:var(--font-accent); font-weight:600; font-size:13px; letter-spacing:0.04em;
+    color:var(--accent); display:flex; align-items:center; gap:10px; margin:0 0 20px;
+  }
+  .eyebrow .line{ width:26px; height:2px; background:var(--accent); display:inline-block; border-radius:2px; }
+  h1{
+    font-family:var(--font-display); font-weight:800; color:var(--heading);
+    font-size:clamp(38px,5.4vw,64px); line-height:1.02; letter-spacing:-0.01em;
+    margin:0 0 20px; max-width:14ch;
+  }
+  h1 .thin{ font-weight:300; color:var(--accent); display:block; }
+  .hero p.lead{ font-size:clamp(16px,1.5vw,18px); line-height:1.65; color:var(--text-dim); max-width:46ch; margin:0 0 32px; }
+  .hero-ctas{ display:flex; gap:14px; flex-wrap:wrap; margin-bottom:38px; }
+  .btn{
+    display:inline-flex; align-items:center; gap:10px; padding:14px 26px; font-weight:600; font-size:15px;
+    text-decoration:none; border-radius:999px; transition: transform .15s ease, background .15s ease, color .15s ease, border-color .15s ease;
+  }
+  .btn-primary{ background:var(--brand-fill); color:var(--brand-on-fill); }
+  .btn-primary:hover{ background:var(--brand-fill-hover); transform:translateY(-1px); }
+  .btn-ghost{ background:transparent; color:var(--heading); border:1.5px solid var(--line); }
+  .btn-ghost:hover{ border-color:var(--accent); color:var(--accent-mid); }
+  .hero-meta{ display:flex; gap:clamp(18px,4vw,40px); flex-wrap:wrap; padding-top:26px; border-top:1px solid var(--line); }
+  .hero-meta .item .num{ font-family:var(--font-display); font-weight:700; font-size:15px; color:var(--heading); }
+  .hero-meta .item .label{ font-size:12.5px; color:var(--text-faint); margin-top:4px; max-width:20ch; }
+
+  /* hero visual */
+  .hero-visual{ position:relative; display:flex; align-items:center; justify-content:center; }
+  .hv-ring{ position:relative; width:100%; max-width:400px; aspect-ratio:1; display:flex; align-items:center; justify-content:center; }
+  .hv-ring svg{ position:absolute; inset:0; width:100%; height:100%; }
+  .hv-ring .arc-seg{ stroke-dasharray:126; stroke-dashoffset:126; animation: draw .9s ease forwards; }
+  .hv-ring .arc-seg:nth-child(1){ animation-delay:.15s; }
+  .hv-ring .arc-seg:nth-child(2){ animation-delay:.28s; }
+  .hv-ring .arc-seg:nth-child(3){ animation-delay:.41s; }
+  .hv-ring .arc-seg:nth-child(4){ animation-delay:.54s; }
+  .hv-ring .arc-seg:nth-child(5){ animation-delay:.67s; }
+  @keyframes draw{ to{ stroke-dashoffset:0; } }
+  .hv-logo{ width:56%; opacity:0; animation: rise .7s ease .9s forwards; filter: drop-shadow(0 18px 30px rgba(0,59,108,.18)); }
+  @keyframes rise{ from{ opacity:0; transform:translateY(10px) scale(.96);} to{ opacity:1; transform:translateY(0) scale(1);} }
+  @media (prefers-reduced-motion: reduce){
+    .hv-ring .arc-seg{ animation:none; stroke-dashoffset:0; }
+    .hv-logo{ animation:none; opacity:1; transform:none; }
+  }
+  .hv-caption{ position:absolute; bottom:-6px; left:50%; transform:translateX(-50%); text-align:center; }
+  .hv-caption b{ font-family:var(--font-display); color:var(--heading); font-size:13px; letter-spacing:.03em; }
+  .hv-caption span{ display:block; font-size:11px; color:var(--text-faint); margin-top:2px; }
+
+  /* ---------- Section shared ---------- */
+  section{ padding: clamp(56px,8vw,92px) 0; }
+  .section-head{ display:flex; justify-content:space-between; align-items:flex-end; gap:24px; margin-bottom:clamp(32px,5vw,50px); flex-wrap:wrap; }
+  .section-tag{ font-family:var(--font-accent); font-weight:600; font-size:12.5px; letter-spacing:.04em; color:var(--accent); margin:0 0 12px; }
+  h2{ font-family:var(--font-display); font-weight:800; color:var(--heading); font-size:clamp(28px,3.6vw,42px); line-height:1.05; margin:0; max-width:17ch; }
+  .section-head p{ color:var(--text-dim); max-width:34ch; font-size:15px; line-height:1.6; margin:0; }
+
+  /* swoosh divider */
+  .swoosh{ width:100%; height:34px; display:block; }
+  .swoosh path{ fill:none; stroke:var(--accent); stroke-width:3; stroke-linecap:round; opacity:.55; }
+
+  /* ---------- Historia ---------- */
+  .historia{ background:var(--bg-soft); border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+  .historia-grid{ display:grid; grid-template-columns:0.85fr 1.15fr; gap:clamp(28px,5vw,64px); }
+  .founder-card{ background:var(--bg); border:1px solid var(--line); border-radius:16px; padding:30px; height:fit-content; box-shadow: 0 20px 40px -28px rgba(0,59,108,.25); }
+  .founder-card .role{ font-family:var(--font-accent); font-weight:600; font-size:12px; letter-spacing:.03em; color:var(--accent); margin-bottom:8px; }
+  .founder-card .name{ font-family:var(--font-display); font-weight:800; font-size:24px; color:var(--heading); margin:0 0 20px; }
+  .fact{ display:flex; justify-content:space-between; gap:12px; padding:12px 0; border-top:1px solid var(--line); font-size:13.5px; }
+  .fact:first-of-type{ border-top:none; }
+  .fact .k{ color:var(--text-faint); }
+  .fact .v{ color:var(--heading); font-weight:600; text-align:right; }
+  .historia-copy p{ font-size:16px; line-height:1.75; color:var(--text-dim); margin:0 0 20px; }
+  .historia-copy p strong{ color:var(--heading); font-weight:700; }
+  .source-note{ margin-top:22px; padding:16px 18px; border-radius:10px; background:var(--tint-2); border:1px solid var(--line); font-size:12px; color:var(--text-dim); line-height:1.6; }
+  .source-note a{ color:var(--accent-mid); text-decoration:none; border-bottom:1px solid var(--tint); font-weight:600; }
+  .source-note a:hover{ border-color:var(--accent-mid); }
+
+  /* ---------- Valores ---------- */
+  .values{ display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+  .value{ background:var(--bg); border:1px solid var(--line); border-radius:16px; padding:30px 26px; transition: border-color .15s ease, transform .15s ease; }
+  .value:hover{ border-color:var(--accent); transform:translateY(-2px); }
+  .value .vi{ width:38px; height:38px; color:var(--accent); margin-bottom:20px; }
+  .value h3{ font-family:var(--font-display); font-weight:700; font-size:18px; color:var(--heading); margin:0 0 10px; }
+  .value p{ color:var(--text-dim); font-size:14px; line-height:1.6; margin:0; }
+
+  /* ---------- Catálogo ---------- */
+  .catalog{ background:var(--bg-soft); border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+  .cat-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+  .cat-card{ background:var(--bg); border:1px solid var(--line); border-radius:16px; padding:28px 24px; display:flex; flex-direction:column; gap:14px; transition: box-shadow .15s ease, transform .15s ease, border-color .15s ease; }
+  .cat-card:hover{ box-shadow:0 20px 36px -26px rgba(0,59,108,.3); transform:translateY(-2px); border-color:var(--tint); }
+  .cat-card .ci{ width:32px; height:32px; color:var(--accent-mid); }
+  .cat-card h3{ font-size:16px; font-weight:700; margin:0; color:var(--heading); font-family:var(--font-body); }
+  .cat-card p{ font-size:13px; color:var(--text-faint); margin:0; line-height:1.5; }
+  .cat-note{ margin-top:22px; font-size:12.5px; color:var(--text-faint); font-style:italic; }
+
+  /* ---------- Proceso ---------- */
+  .process{ display:grid; grid-template-columns:repeat(3,1fr); gap:clamp(20px,4vw,40px); }
+  .step{ position:relative; padding-top:26px; border-top:2px solid var(--tint); }
+  .step .stepnum{ font-family:var(--font-display); font-weight:800; font-size:22px; color:var(--accent); display:block; margin-bottom:14px; }
+  .step h3{ font-family:var(--font-display); font-weight:700; font-size:19px; color:var(--heading); margin:0 0 10px; }
+  .step p{ color:var(--text-dim); font-size:14px; line-height:1.6; margin:0; }
+
+  /* ---------- B2B band ---------- */
+  .b2b{ background: linear-gradient(120deg, var(--navy), var(--mid)); border-radius:24px; padding:clamp(32px,5vw,56px); display:grid; grid-template-columns:1.3fr 0.7fr; gap:32px; align-items:center; color:#fff; }
+  .b2b .section-tag{ color:var(--ice); }
+  .b2b h2{ color:#fff; max-width:18ch; }
+  .b2b p{ color:#DCEEF7; font-size:15px; line-height:1.6; max-width:48ch; margin:14px 0 0; }
+  .b2b-cta{ display:flex; justify-content:flex-end; }
+  .b2b .btn-primary{ background:#fff; color:var(--navy); }
+  .b2b .btn-primary:hover{ background:var(--ice); }
+
+  /* ---------- Contacto ---------- */
+  .contact-grid{ display:grid; grid-template-columns:1fr 1fr; gap:clamp(28px,5vw,60px); }
+  .info-list{ list-style:none; padding:0; margin:0 0 28px; }
+  .info-list li{ padding:16px 0; border-top:1px solid var(--line); display:grid; grid-template-columns:110px 1fr; gap:16px; font-size:14px; }
+  .info-list li:last-child{ border-bottom:1px solid var(--line); }
+  .info-list .k{ color:var(--text-faint); font-family:var(--font-accent); font-weight:600; font-size:12px; padding-top:2px; }
+  .info-list .v{ color:var(--text); }
+  .placeholder-badge{ display:inline-block; font-family:var(--font-accent); font-weight:600; font-size:10.5px; color:var(--accent-mid); background:var(--tint-2); border:1px solid var(--tint); border-radius:999px; padding:2px 9px; margin-left:8px; vertical-align:middle; }
+  form{ display:flex; flex-direction:column; gap:14px; }
+  .field{ display:flex; flex-direction:column; gap:7px; }
+  .field label{ font-size:12.5px; color:var(--text-faint); font-family:var(--font-accent); font-weight:600; }
+  .field input, .field select, .field textarea{
+    background:var(--bg-soft); border:1px solid var(--line); color:var(--text); padding:12px 14px;
+    border-radius:10px; font-family:var(--font-body); font-size:14.5px; width:100%;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus{ border-color:var(--accent); background:var(--bg); }
+  .field textarea{ resize:vertical; min-height:96px; }
+  .form-note{ font-size:12px; color:var(--text-faint); margin-top:2px; }
+
+  /* ---------- Footer ---------- */
+  footer{ border-top:1px solid var(--line); padding:40px 0; }
+  .foot-grid{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:18px; }
+  .foot-grid .brand-logo{ height:32px; }
+  .foot-links{ display:flex; gap:22px; list-style:none; padding:0; margin:0; }
+  .foot-links a{ text-decoration:none; color:var(--text-faint); font-size:13px; }
+  .foot-links a:hover{ color:var(--accent-mid); }
+  .foot-fine{ font-size:12px; color:var(--text-faint); margin-top:22px; line-height:1.6; }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width:880px){
+    .nav-links{ display:none; }
+    .menu-btn{ display:flex; }
+    .hero-grid{ grid-template-columns:1fr; }
+    .hero-visual{ order:-1; margin-bottom:8px; }
+    .hv-ring{ max-width:260px; }
+    .historia-grid{ grid-template-columns:1fr; }
+    .values{ grid-template-columns:1fr; }
+    .cat-grid{ grid-template-columns:1fr 1fr; }
+    .process{ grid-template-columns:1fr; }
+    .b2b{ grid-template-columns:1fr; text-align:left; }
+    .b2b-cta{ justify-content:flex-start; }
+    .contact-grid{ grid-template-columns:1fr; }
+  }
+  @media (max-width:560px){
+    .cat-grid{ grid-template-columns:1fr; }
+    .info-list li{ grid-template-columns:90px 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a href="#top" class="brand-logo" aria-label="Global Refriauto, inicio">
+      <img src="assets/logo-full.png" alt="Global Refriauto">
+    </a>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="#historia">Historia</a></li>
+        <li><a href="#catalogo">Catálogo</a></li>
+        <li><a href="#talleres">Talleres</a></li>
+        <li><a href="#contacto">Contacto</a></li>
+      </ul>
+    </nav>
+    <a href="#contacto" class="nav-cta">Solicitar cotización</a>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <p class="eyebrow"><span class="line"></span>HVAC AUTOMOTRIZ · REPÚBLICA DOMINICANA</p>
+        <h1>El sistema de A/C de tu vehículo<span class="thin">diagnosticado bien, desde la primera vez</span></h1>
+        <p class="lead">Global Refriauto se dedica a sistemas de aire acondicionado y refrigeración automotriz: diagnóstico técnico, repuestos y servicio para particulares, talleres y flotillas.</p>
+        <div class="hero-ctas">
+          <a href="#catalogo" class="btn btn-primary">Ver catálogo</a>
+          <a href="#contacto" class="btn btn-ghost">Hablar con un técnico</a>
+        </div>
+        <div class="hero-meta">
+          <div class="item"><div class="num">2017</div><div class="label">Año de fundación</div></div>
+          <div class="item"><div class="num">14 años</div><div class="label">Trayectoria corporativa del fundador antes de emprender</div></div>
+          <div class="item"><div class="num">Ing. Industrial</div><div class="label">Formación técnica del fundador</div></div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hv-ring">
+          <svg viewBox="0 0 200 200" aria-hidden="true">
+            <path class="arc-seg" d="M 30 130 A 80 80 0 0 1 45 76" fill="none" stroke="#C8E9F1" stroke-width="14" stroke-linecap="round"/>
+            <path class="arc-seg" d="M 45 76 A 80 80 0 0 1 76 45" fill="none" stroke="#7FC7E3" stroke-width="14" stroke-linecap="round"/>
+            <path class="arc-seg" d="M 76 45 A 80 80 0 0 1 124 45" fill="none" stroke="#3399CC" stroke-width="14" stroke-linecap="round"/>
+            <path class="arc-seg" d="M 124 45 A 80 80 0 0 1 155 76" fill="none" stroke="#1D6099" stroke-width="14" stroke-linecap="round"/>
+            <path class="arc-seg" d="M 155 76 A 80 80 0 0 1 170 130" fill="none" stroke="#003B6C" stroke-width="14" stroke-linecap="round"/>
+          </svg>
+          <img class="hv-logo" src="assets/logo-icon.png" alt="Ícono Global Refriauto: velocímetro y silueta de vehículo">
+          <div class="hv-caption"><b>DIAGNÓSTICO EN SITIO</b><span>R-134a · R-1234yf</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HISTORIA -->
+  <section class="historia" id="historia">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <p class="section-tag">002 / HISTORIA</p>
+          <h2>De catorce años de oficina a un taller propio</h2>
+        </div>
+      </div>
+      <div class="historia-grid">
+        <div class="founder-card">
+          <p class="role">Fundador</p>
+          <p class="name">Juan Roberto Rojas Musa</p>
+          <div class="fact"><span class="k">Formación</span><span class="v">Ingeniería industrial</span></div>
+          <div class="fact"><span class="k">Trayectoria previa</span><span class="v">14 años, sector corporativo</span></div>
+          <div class="fact"><span class="k">Año de inicio</span><span class="v">2017</span></div>
+          <div class="fact"><span class="k">Inversión inicial</span><span class="v">RD$700,000</span></div>
+          <div class="fact"><span class="k">Sector</span><span class="v">HVAC automotriz</span></div>
+        </div>
+        <div class="historia-copy">
+          <p><strong>Juan Roberto Rojas Musa</strong> pasó catorce años en el mundo corporativo antes de dejar esa estabilidad para emprender en un sector que exige precisión técnica: la refrigeración automotriz. Global Refriauto arrancó en <strong>2017</strong> con una inversión inicial de <strong>RD$700,000</strong>, apostando a que el conocimiento de ingeniería industrial podía convertirse en un negocio de servicio técnico serio, no genérico.</p>
+          <p>Es una historia de arranque reciente, no de generaciones familiares ni de una gran expansión regional todavía — y esa es exactamente su propuesta: un negocio dirigido por alguien con formación de ingeniería, enfocado en un solo problema técnico, en lugar de repartirse entre demasiadas líneas de producto.</p>
+          <div class="source-note">
+            Fuente: perfil de Global Refriauto en <a href="https://revistamercado.do/vision-emprendedora-2026/" target="_blank" rel="noopener">Revista Mercado — Visión Emprendedora 2026</a>. No hay registro público adicional sobre hitos posteriores a la fundación; esta sección debe ampliarse con detalles directos de la empresa (primer cliente, ubicación, equipo actual).
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VALORES -->
+  <section>
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <p class="section-tag">003 / ENFOQUE</p>
+          <h2>Por qué un especialista, no un repuestero</h2>
+        </div>
+      </div>
+      <div class="values">
+        <div class="value">
+          <svg class="vi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+          <h3>Diagnóstico antes que venta</h3>
+          <p>El problema se identifica primero. Un compresor no se cambia si el sensor está fallando — eso ahorra gasto innecesario al cliente.</p>
+        </div>
+        <div class="value">
+          <svg class="vi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 20V10l8-6 8 6v10"/><path d="M9 20v-6h6v6"/></svg>
+          <h3>Formación técnica real</h3>
+          <p>Base de ingeniería industrial aplicada a un oficio que en la práctica se aprende casi siempre de forma empírica.</p>
+        </div>
+        <div class="value">
+          <svg class="vi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="7" width="13" height="10" rx="1"/><path d="M16 10h3l2 3v4h-5"/><circle cx="7.5" cy="18" r="1.6"/><circle cx="17.5" cy="18" r="1.6"/></svg>
+          <h3>Piensa en flotillas</h3>
+          <p>Servicio pensado también para quien tiene varios vehículos en operación, no solo para el dueño de un auto particular.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CATALOGO -->
+  <section class="catalog" id="catalogo">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <p class="section-tag">004 / CATÁLOGO</p>
+          <h2>Categorías del sistema de A/C automotriz</h2>
+        </div>
+        <p>Estructura de catálogo lista para cargar productos reales, precios y disponibilidad.</p>
+      </div>
+      <div class="cat-grid">
+        <div class="cat-card">
+          <svg class="ci" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 4v16M16 4v16M4 8h16M4 16h16"/></svg>
+          <h3>Compresores</h3>
+          <p>El corazón del sistema — el componente que más consultas técnicas genera.</p>
+        </div>
+        <div class="cat-card">
+          <svg class="ci" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12h4l2-6 4 12 2-6h4"/></svg>
+          <h3>Condensadores y evaporadores</h3>
+          <p>Intercambio de calor del sistema, por marca y modelo de vehículo.</p>
+        </div>
+        <div class="cat-card">
+          <svg class="ci" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3v6M12 15v6M5 12h2M17 12h2M7 7l1.5 1.5M15.5 15.5L17 17M17 7l-1.5 1.5M8.5 15.5L7 17"/><circle cx="12" cy="12" r="3"/></svg>
+          <h3>Gas refrigerante</h3>
+          <p>R-134a y R-1234yf, recarga con verificación de fugas antes de rellenar.</p>
+        </div>
+        <div class="cat-card">
+          <svg class="ci" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 6c4 0 4 12 8 12s4-12 8-12"/></svg>
+          <h3>Mangueras y conexiones</h3>
+          <p>Sellado y presión correctos — la causa más común de fugas lentas.</p>
+        </div>
+        <div class="cat-card">
+          <svg class="ci" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="3"/><circle cx="16" cy="16" r="3"/><path d="M10.5 9.5l3 3"/></svg>
+          <h3>Correas y poleas</h3>
+          <p>Transmisión del compresor — desgaste que se revisa en cada servicio.</p>
+        </div>
+        <div class="cat-card">
+          <svg class="ci" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 9h4M7 13h7"/><circle cx="17" cy="14" r="1.6"/></svg>
+          <h3>Kits de diagnóstico</h3>
+          <p>Manómetros y equipo de medición para talleres que hacen su propio servicio.</p>
+        </div>
+      </div>
+      <p class="cat-note">Categorías ilustrativas del sector. Sustituir por el catálogo real (fotos, precios, compatibilidad por vehículo) antes de habilitar la compra en línea.</p>
+    </div>
+  </section>
+
+  <!-- PROCESO / TALLERES -->
+  <section id="talleres">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <p class="section-tag">005 / CÓMO TRABAJAMOS</p>
+          <h2>Del síntoma al sistema reparado</h2>
+        </div>
+      </div>
+      <div class="process">
+        <div class="step">
+          <span class="stepnum">01</span>
+          <h3>Diagnóstico</h3>
+          <p>Medición de presión, revisión de fugas y del compresor antes de recomendar cualquier repuesto.</p>
+        </div>
+        <div class="step">
+          <span class="stepnum">02</span>
+          <h3>Servicio</h3>
+          <p>Reparación, recarga o cambio de la pieza específica que falló — no del sistema completo por defecto.</p>
+        </div>
+        <div class="step">
+          <span class="stepnum">03</span>
+          <h3>Verificación</h3>
+          <p>Prueba de presión y temperatura de salida antes de entregar el vehículo.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- B2B -->
+  <section>
+    <div class="wrap">
+      <div class="b2b">
+        <div>
+          <p class="section-tag">006 / TALLERES Y FLOTILLAS</p>
+          <h2>Precios por volumen para talleres y flotillas</h2>
+          <p>Si operas un taller o administras una flotilla de vehículos, podemos conversar condiciones de compra recurrente y prioridad de servicio.</p>
+        </div>
+        <div class="b2b-cta">
+          <a href="#contacto" class="btn btn-primary">Solicitar condiciones B2B</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACTO -->
+  <section id="contacto">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <p class="section-tag">007 / CONTACTO</p>
+          <h2>Escríbenos sobre tu vehículo</h2>
+        </div>
+      </div>
+      <div class="contact-grid">
+        <div>
+          <ul class="info-list">
+            <li><span class="k">DIRECCIÓN</span><span class="v">[Dirección del taller]<span class="placeholder-badge">completar</span></span></li>
+            <li><span class="k">TELÉFONO</span><span class="v">[Teléfono / WhatsApp]<span class="placeholder-badge">completar</span></span></li>
+            <li><span class="k">CORREO</span><span class="v">[correo@globalrefriauto.com.do]<span class="placeholder-badge">completar</span></span></li>
+            <li><span class="k">HORARIO</span><span class="v">[Días y horario de atención]<span class="placeholder-badge">completar</span></span></li>
+          </ul>
+        </div>
+        <form onsubmit="event.preventDefault(); this.querySelector('.form-note').textContent='Formulario de ejemplo — conectar a un backend, WhatsApp Business o correo real antes de publicar.';">
+          <div class="field">
+            <label for="nombre">Nombre</label>
+            <input id="nombre" type="text" placeholder="Tu nombre" required>
+          </div>
+          <div class="field">
+            <label for="vehiculo">Vehículo</label>
+            <input id="vehiculo" type="text" placeholder="Marca, modelo y año">
+          </div>
+          <div class="field">
+            <label for="mensaje">¿Qué está pasando con el A/C?</label>
+            <textarea id="mensaje" placeholder="Describe el síntoma: no enfría, huele raro, ruido, etc." required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary" style="align-self:flex-start;">Enviar consulta</button>
+          <p class="form-note">Formulario estático de ejemplo — no envía datos todavía.</p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <a href="#top" class="brand-logo"><img src="assets/logo-full.png" alt="Global Refriauto"></a>
+      <ul class="foot-links">
+        <li><a href="#historia">Historia</a></li>
+        <li><a href="#catalogo">Catálogo</a></li>
+        <li><a href="#contacto">Contacto</a></li>
+      </ul>
+    </div>
+    <p class="foot-fine">Global Refriauto — sistemas HVAC automotrices, República Dominicana. Fundada en 2017 por Juan Roberto Rojas Musa. Plantilla de sitio estático; catálogo, contacto y checkout pendientes de datos reales de la empresa.</p>
+  </div>
+</footer>
+
+</body>
+</html>
